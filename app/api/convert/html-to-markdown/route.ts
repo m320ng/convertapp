@@ -6,7 +6,7 @@ function cleanText(text: string): string {
     return text.replace(/\s+/g, ' ').trim();
 }
 
-function extractCodeBlock(element: cheerio.Element, $: cheerio.CheerioAPI): string {
+function extractCodeBlock(element: cheerio.Element, $: cheerio.Root): string {
     const codeText = $(element).text();
 
     // Try to find language identifier from class

@@ -196,7 +196,7 @@ export default function Base64ToImage() {
                                     <code>data:image/[형식];base64,...</code>
                                 </li>
                                 <li>
-                                    <code>&lt;img src="data:image/[형식];base64,..."&gt;</code>
+                                    <code>&lt;img src=&quot;data:image/[형식];base64,...&quot;&gt;</code>
                                 </li>
                                 <li>
                                     Base64 문자열만 입력 (자동으로 PNG로 처리)
@@ -204,10 +204,10 @@ export default function Base64ToImage() {
                             </ul>
                         </li>
                         <li>
-                            Base64 문자열을 복사한 후 <kbd className="px-2 py-1 bg-gray-100 rounded">Ctrl</kbd> + <kbd className="px-2 py-1 bg-gray-100 rounded">V</kbd>를 누르거나, "직접 입력하기"를 클릭하여 입력할 수 있습니다.
+                            Base64 문자열을 복사한 후 <kbd className="px-2 py-1 bg-gray-100 rounded">Ctrl</kbd> + <kbd className="px-2 py-1 bg-gray-100 rounded">V</kbd>를 누르거나, &quot;직접 입력하기&quot;를 클릭하여 입력할 수 있습니다.
                         </li>
                         <li>
-                            변환된 이미지는 "다운로드" 버튼을 클릭하여 저장할 수 있습니다.
+                            변환된 이미지는 &quot;다운로드&quot; 버튼을 클릭하여 저장할 수 있습니다.
                         </li>
                         <li>
                             이미지 미리보기가 자동으로 표시됩니다.

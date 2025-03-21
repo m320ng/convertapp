@@ -20,6 +20,7 @@ export async function POST(request: Request) {
                 plugins: ['jsx', 'typescript'],
             });
         } catch (error) {
+            console.error('Error parsing JavaScript code:', error);
             return NextResponse.json(
                 { error: 'Invalid JavaScript code' },
                 { status: 400 }

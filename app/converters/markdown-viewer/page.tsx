@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import Image from 'next/image';
 
 const DEFAULT_MARKDOWN = `# 마크다운 미리보기
 
@@ -45,7 +46,7 @@ function hello() {
 
 ### 링크와 이미지
 [Google](https://google.com)
-![이미지 설명](https://placeholder.heyo.me/150)
+![이미지 설명](http://placeholder.heyo.me/150)
 
 ### 체크리스트
 - [x] 완료된 항목
@@ -54,6 +55,13 @@ function hello() {
 ### 수평선
 ---
 `;
+
+// Update component types
+interface CodeProps {
+    inline?: boolean;
+    children?: React.ReactNode;
+    className?: string;
+}
 
 export default function MarkdownViewer() {
     const [markdown, setMarkdown] = useState(DEFAULT_MARKDOWN);
@@ -132,62 +140,86 @@ export default function MarkdownViewer() {
                                     <ReactMarkdown
                                         remarkPlugins={[remarkGfm]}
                                         components={{
-                                            // 커스텀 컴포넌트 스타일링
-                                            h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mb-6" {...props} />,
-                                            h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-8 mb-4 pb-2 border-b" {...props} />,
-                                            h3: ({ node, ...props }) => <h3 className="text-xl font-bold mt-6 mb-4" {...props} />,
-                                            h4: ({ node, ...props }) => <h4 className="text-lg font-bold mt-4 mb-2" {...props} />,
-                                            p: ({ node, ...props }) => <p className="my-4 leading-7" {...props} />,
-                                            a: ({ node, ...props }) => (
+                                            h1: ({ children }) => (
+                                                <h1 className="text-3xl font-bold mb-6">{children}</h1>
+                                            ),
+                                            h2: ({ children }) => (
+                                                <h2 className="text-2xl font-bold mt-8 mb-4 pb-2 border-b">{children}</h2>
+                                            ),
+                                            h3: ({ children }) => (
+                                                <h3 className="text-xl font-bold mt-6 mb-4">{children}</h3>
+                                            ),
+                                            h4: ({ children }) => (
+                                                <h4 className="text-lg font-bold mt-4 mb-2">{children}</h4>
+                                            ),
+                                            p: ({ children }) => (
+                                                <p className="my-4 leading-7">{children}</p>
+                                            ),
+                                            a: ({ children, href }) => (
                                                 <a
                                                     className="text-blue-500 hover:text-blue-600 transition-colors"
+                                                    href={href}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    {...props}
-                                                />
+                                                >
+                                                    {children}
+                                                </a>
                                             ),
-                                            blockquote: ({ node, ...props }) => (
+                                            blockquote: ({ children }) => (
                                                 <blockquote
                                                     className="pl-4 border-l-4 border-blue-500 my-4 italic text-gray-700"
-                                                    {...props}
-                                                />
+                                                >
+                                                    {children}
+                                                </blockquote>
                                             ),
-                                            code: ({ inline, className, children, ...props }: any) => (
+                                            code: ({ inline, children }: CodeProps) => (
                                                 inline ?
-                                                    <code className="bg-gray-100 px-1.5 py-0.5 rounded text-pink-500 text-sm" {...props}>
+                                                    <code className="bg-gray-100 px-1.5 py-0.5 rounded text-pink-500 text-sm">
                                                         {children}
                                                     </code> :
-                                                    <code className="block bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm" {...props}>
+                                                    <code className="block bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
                                                         {children}
                                                     </code>
                                             ),
-                                            ul: ({ node, ...props }) => <ul className="list-disc pl-6 my-4 space-y-2" {...props} />,
-                                            ol: ({ node, ...props }) => <ol className="list-decimal pl-6 my-4 space-y-2" {...props} />,
-                                            li: ({ node, ...props }) => <li className="my-1" {...props} />,
-                                            img: ({ node, ...props }) => (
-                                                <img
-                                                    className="max-w-full h-auto rounded-lg my-4 mx-auto shadow-lg"
-                                                    {...props}
-                                                />
+                                            ul: ({ children }) => (
+                                                <ul className="list-disc pl-6 my-4 space-y-2">{children}</ul>
                                             ),
-                                            table: ({ node, ...props }) => (
-                                                <div className="my-4 overflow-x-auto">
-                                                    <table className="min-w-full border border-gray-200 rounded-lg" {...props} />
+                                            ol: ({ children }) => (
+                                                <ol className="list-decimal pl-6 my-4 space-y-2">{children}</ol>
+                                            ),
+                                            li: ({ children }) => (
+                                                <li className="my-1">{children}</li>
+                                            ),
+                                            img: ({ src, alt }) => (
+                                                <div className="relative w-full h-64 my-4">
+                                                    <Image
+                                                        src={src || ''}
+                                                        alt={alt || '마크다운 이미지'}
+                                                        fill
+                                                        className="object-contain rounded-lg"
+                                                    />
                                                 </div>
                                             ),
-                                            th: ({ node, ...props }) => (
-                                                <th
-                                                    className="bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900 border-b"
-                                                    {...props}
-                                                />
+                                            table: ({ children }) => (
+                                                <div className="my-4 overflow-x-auto">
+                                                    <table className="min-w-full border border-gray-200 rounded-lg">
+                                                        {children}
+                                                    </table>
+                                                </div>
                                             ),
-                                            td: ({ node, ...props }) => (
-                                                <td
-                                                    className="px-6 py-4 text-sm text-gray-700 border-b border-gray-200"
-                                                    {...props}
-                                                />
+                                            th: ({ children }) => (
+                                                <th className="bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900 border-b">
+                                                    {children}
+                                                </th>
                                             ),
-                                            hr: ({ node, ...props }) => <hr className="my-8 border-t border-gray-200" {...props} />,
+                                            td: ({ children }) => (
+                                                <td className="px-6 py-4 text-sm text-gray-700 border-b border-gray-200">
+                                                    {children}
+                                                </td>
+                                            ),
+                                            hr: () => (
+                                                <hr className="my-8 border-t border-gray-200" />
+                                            ),
                                         }}
                                     >
                                         {markdown}

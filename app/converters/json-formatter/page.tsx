@@ -36,6 +36,7 @@ export default function JsonFormatter() {
             setOutput(formatted);
             setError(null);
         } catch (err) {
+            console.error('formatJson 실패:', err);
             setError('유효하지 않은 JSON 형식입니다. 다시 확인해주세요.');
             setOutput('');
         }
@@ -65,6 +66,7 @@ export default function JsonFormatter() {
             const minified = JSON.stringify(parsed);
             setOutput(minified);
         } catch (err) {
+            console.error('minifyJson 실패:', err);
             setError('JSON을 압축하는 중 오류가 발생했습니다.');
         }
     };

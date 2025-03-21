@@ -235,7 +235,7 @@ export default function ImageToBase64() {
                             여러 이미지를 한 번에 변환할 수 있습니다.
                         </li>
                         <li>
-                            "복사" 버튼을 클릭하여 Base64 문자열을 클립보드에 복사할 수 있습니다.
+                            &quot;복사&quot; 버튼을 클릭하여 Base64 문자열을 클립보드에 복사할 수 있습니다.
                         </li>
                     </ul>
                 </div>

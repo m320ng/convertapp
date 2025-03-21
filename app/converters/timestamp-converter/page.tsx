@@ -159,7 +159,7 @@ export default function TimestampConverter() {
                             날짜 입력은 브라우저의 datetime-local 입력을 사용하며, 초 단위까지 지원합니다.
                         </li>
                         <li>
-                            "현재 시간 가져오기" 버튼을 클릭하면 현재 시간이 자동으로 입력됩니다.
+                            &quot;현재 시간 가져오기&quot; 버튼을 클릭하면 현재 시간이 자동으로 입력됩니다.
                         </li>
                     </ul>
                 </div>

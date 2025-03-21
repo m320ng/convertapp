@@ -171,7 +171,7 @@ export default function HashGenerator() {
                 {results.length > 0 && (
                     <div className="space-y-4">
                         <h2 className="text-xl font-semibold">생성된 해시값</h2>
-                        {results.map((result, index) => (
+                        {results.map((result) => (
                             <div
                                 key={result.algorithm}
                                 className="border rounded-lg p-4 space-y-2"
@@ -208,13 +208,13 @@ export default function HashGenerator() {
                             </ul>
                         </li>
                         <li>
-                            텍스트를 복사한 후 <kbd className="px-2 py-1 bg-gray-100 rounded">Ctrl</kbd> + <kbd className="px-2 py-1 bg-gray-100 rounded">V</kbd>를 누르거나, "직접 입력하기"를 클릭하여 입력할 수 있습니다.
+                            텍스트를 복사한 후 <kbd className="px-2 py-1 bg-gray-100 rounded">Ctrl</kbd> + <kbd className="px-2 py-1 bg-gray-100 rounded">V</kbd>를 누르거나, &quot;직접 입력하기&quot;를 클릭하여 입력할 수 있습니다.
                         </li>
                         <li>
                             여러 해시 알고리즘을 동시에 선택하여 비교할 수 있습니다.
                         </li>
                         <li>
-                            "복사" 버튼을 클릭하여 원문이나 해시값을 클립보드에 복사할 수 있습니다.
+                            &quot;복사&quot; 버튼을 클릭하여 원문이나 해시값을 클립보드에 복사할 수 있습니다.
                         </li>
                     </ul>
                 </div>

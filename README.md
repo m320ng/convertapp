@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 개발자 변환 도구 모음
 
-## Getting Started
+다양한 변환 도구들
 
-First, run the development server:
+## 주요 기능
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **HTML → Markdown 변환**: HTML을 Markdown으로 변환
+- **코드 포맷터**: JavaScript, JSON, SQL 코드 정리
+- **SVG → React 변환**: SVG 코드를 React 컴포넌트로 변환
+- **시간 변환**: Unix Timestamp와 일반 날짜 상호 변환
+- **Base64 변환**: 이미지/텍스트와 Base64 상호 변환
+- **Hash 생성**: MD5, SHA-1, SHA-256 등 해시값 생성
+- **IP 위치정보**: IP 주소의 지리적 위치 정보 조회
+- **Markdown 뷰어**: 실시간 마크다운 미리보기
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 기술 스택
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Dependencies**:
+  - React Markdown
+  - Remark GFM
+  - Cheerio
+  - js-beautify
+  - sql-formatter
+  - crypto-js

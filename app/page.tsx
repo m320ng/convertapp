@@ -120,6 +120,21 @@ export default function Home() {
         <footer className="mt-16 text-center text-gray-500 text-sm">
           <p>더 많은 개발 도구 추가 예정</p>
         </footer>
+        <div className="absolute bottom-0 left-0 right-0 p-4 text-center text-gray-600 bg-white/80 backdrop-blur-sm text-sm">
+          <div className="mb-1">
+            <a href="https://heyo.me/contact" className="hover:text-blue-500 transition-colors">
+              Contact Us
+            </a>
+            {' • '}
+            <a href="https://github.com/m320ng" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors">
+              GitHub
+            </a>
+          </div>
+          <div>
+            © {new Date().getFullYear()} <a href="https://heyo.me" className="hover:text-blue-500 transition-colors">heyo.me</a> All rights reserved.
+          </div>
+        </div>
+
       </div>
     </main>
   );

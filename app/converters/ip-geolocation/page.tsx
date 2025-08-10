@@ -24,47 +24,35 @@ export default function IpGeolocation() {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    const isValidIp = (ip: string) => {
-        // IPv4 검증
-        const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
-        if (ipv4Regex.test(ip)) {
-            const parts = ip.split('.');
-            return parts.every(part => {
-                const num = parseInt(part, 10);
-                return num >= 0 && num <= 255;
-            });
-        }
-        // IPv6 검증 (간단한 형식 체크)
-        const ipv6Regex = /^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
-        return ipv6Regex.test(ip);
-    };
-
     const fetchGeoLocation = async (ip: string) => {
         try {
             setIsLoading(true);
             setError(null);
 
-            if (!isValidIp(ip)) {
-                throw new Error('유효한 IP 주소가 아닙니다.');
-            }
+            const response = await fetch('/api/convert/ip-geolocation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ip }),
+            });
 
-            const response = await fetch(`http://ip-api.com/json/${ip}?fields=status,message,country,countryCode,region,regionName,city,zip,lat,lon,timezone,isp,org,as,query`);
             const data = await response.json();
 
-            if (data.status === 'fail') {
-                throw new Error(data.message || 'IP 주소 조회에 실패했습니다.');
+            if (!response.ok) {
+                throw new Error(data.error || 'IP 주소 조회에 실패했습니다.');
             }
 
             setResult({
-                ip: data.query,
+                ip: data.ip,
                 country: data.country,
                 countryCode: data.countryCode,
                 region: data.region,
                 regionName: data.regionName,
                 city: data.city,
                 zip: data.zip,
-                latitude: data.lat,
-                longitude: data.lon,
+                latitude: data.latitude,
+                longitude: data.longitude,
                 timezone: data.timezone,
                 isp: data.isp,
                 org: data.org,
@@ -105,11 +93,11 @@ export default function IpGeolocation() {
     useEffect(() => {
         const fetchClientIp = async () => {
             try {
-                const response = await fetch('http://ip-api.com/json/?fields=query');
+                const response = await fetch('/api/convert/ip-geolocation');
                 const data = await response.json();
-                if (data.query) {
-                    setInput(data.query);
-                    fetchGeoLocation(data.query);
+                if (data.ip) {
+                    setInput(data.ip);
+                    fetchGeoLocation(data.ip);
                 }
             } catch (err) {
                 console.error('클라이언트 IP 조회 실패:', err);

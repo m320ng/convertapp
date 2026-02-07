@@ -193,7 +193,7 @@ export default function MarkdownViewer() {
                                             img: ({ src, alt }) => (
                                                 <div className="relative w-full h-64 my-4">
                                                     <Image
-                                                        src={src || ''}
+                                                        src={typeof src === 'string' ? src : ''}
                                                         alt={alt || '마크다운 이미지'}
                                                         fill
                                                         className="object-contain rounded-lg"

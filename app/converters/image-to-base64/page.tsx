@@ -10,6 +10,15 @@ interface FileInfo {
     base64: string;
 }
 
+const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = error => reject(error);
+    });
+};
+
 export default function ImageToBase64() {
     const [files, setFiles] = useState<FileInfo[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -34,8 +43,7 @@ export default function ImageToBase64() {
                         type: file.type,
                         base64: base64,
                     });
-                } catch (err) {
-                    console.error('파일 변환 중 오류:', err);
+                } catch {
                     setError('파일을 변환하는 중 오류가 발생했습니다.');
                 }
             }
@@ -74,8 +82,7 @@ export default function ImageToBase64() {
                     type: file.type,
                     base64: base64,
                 });
-            } catch (err) {
-                console.error('파일 변환 중 오류:', err);
+            } catch {
                 setError('파일을 변환하는 중 오류가 발생했습니다.');
             }
         }
@@ -90,21 +97,11 @@ export default function ImageToBase64() {
         }
     });
 
-    const convertToBase64 = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = error => reject(error);
-        });
-    };
-
     const copyToClipboard = async (base64: string) => {
         try {
             await navigator.clipboard.writeText(base64);
             alert('클립보드에 복사되었습니다!');
-        } catch (error) {
-            console.error('복사 실패:', error);
+        } catch {
             alert('클립보드에 복사하지 못했습니다');
         }
     };
@@ -242,4 +239,4 @@ export default function ImageToBase64() {
             </div>
         </div>
     );
-} 
+}

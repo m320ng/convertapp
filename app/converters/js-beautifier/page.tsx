@@ -1,6 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
+import { beautifyJavaScript } from '@/app/lib/js-beautifier';
 
 export default function JsBeautifier() {
     const [input, setInput] = useState('');
@@ -8,8 +10,31 @@ export default function JsBeautifier() {
     const [isLoading, setIsLoading] = useState(false);
     const [showInput, setShowInput] = useState(false);
     const [directInput, setDirectInput] = useState('');
+    const [error, setError] = useState<string | null>(null);
 
-    const handlePaste = async (e: ClipboardEvent) => {
+    const beautifyCode = useCallback(async (code: string) => {
+        try {
+            setIsLoading(true);
+            const beautified = await beautifyJavaScript(code);
+            setOutput(beautified);
+            setError(null);
+            if (!showInput) {
+                setDirectInput('');
+                setShowInput(false);
+            }
+        } catch (beautifyError) {
+            setOutput('');
+            setError(
+                beautifyError instanceof Error
+                    ? beautifyError.message
+                    : 'JavaScript 코드 정리 중 오류가 발생했습니다.',
+            );
+        } finally {
+            setIsLoading(false);
+        }
+    }, [showInput]);
+
+    const handlePaste = useCallback(async (e: ClipboardEvent) => {
         // textarea나 input에서의 붙여넣기는 무시
         if (e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement) {
             return;
@@ -21,40 +46,10 @@ export default function JsBeautifier() {
                 setInput(text);
                 await beautifyCode(text);
             }
-        } catch (error) {
-            console.error('붙여넣기 실패:', error);
-            alert('클립보드에서 가져오지 못했습니다');
+        } catch {
+            setError('클립보드에서 가져오지 못했습니다.');
         }
-    };
-
-    const beautifyCode = async (code: string) => {
-        try {
-            setIsLoading(true);
-            const response = await fetch('/api/convert/js-beautify', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ code }),
-            });
-
-            if (!response.ok) {
-                throw new Error('코드 정리에 실패했습니다');
-            }
-
-            const data = await response.json();
-            setOutput(data.beautified);
-            if (!showInput) {  // 직접 입력 모드가 아닐 때만 초기화
-                setDirectInput('');
-                setShowInput(false);
-            }
-        } catch (error) {
-            console.error('JavaScript 코드 정리 중 오류 발생:', error);
-            alert('코드 정리에 실패했습니다. 다시 시도해주세요.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    }, [beautifyCode]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -68,8 +63,7 @@ export default function JsBeautifier() {
         try {
             await navigator.clipboard.writeText(output);
             alert('클립보드에 복사되었습니다!');
-        } catch (error) {
-            console.error('복사 실패:', error);
+        } catch {
             alert('클립보드에 복사하지 못했습니다');
         }
     };
@@ -79,7 +73,7 @@ export default function JsBeautifier() {
         return () => {
             document.removeEventListener('paste', handlePaste);
         };
-    }, []);
+    }, [handlePaste]);
 
     return (
         <div className="min-h-screen p-8">
@@ -118,6 +112,12 @@ export default function JsBeautifier() {
                 )}
 
                 <div className="space-y-4">
+                    {error && (
+                        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
+                            {error}
+                        </div>
+                    )}
+
                     {input && (
                         <div>
                             <h2 className="text-xl font-semibold mb-2">입력된 코드:</h2>
@@ -153,4 +153,4 @@ export default function JsBeautifier() {
             </div>
         </div>
     );
-} 
+}

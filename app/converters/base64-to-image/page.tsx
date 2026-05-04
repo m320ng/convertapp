@@ -55,7 +55,6 @@ export default function Base64ToImage() {
                 size: sizeInBytes
             });
         } catch (err) {
-            console.error('변환 중 오류:', err);
             setError(err instanceof Error ? err.message : '변환 중 오류가 발생했습니다.');
             setImage(null);
         }
@@ -217,4 +216,4 @@ export default function Base64ToImage() {
             </div>
         </div>
     );
-} 
+}

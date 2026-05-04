@@ -27,8 +27,7 @@ export default function Base64Converter() {
                 const decoded = decodeURIComponent(escape(atob(value)));
                 setOutput(decoded);
             }
-        } catch (err) {
-            console.error('변환 중 오류:', err);
+        } catch {
             setError(mode === 'encode'
                 ? '텍스트를 Base64로 인코딩하는 중 오류가 발생했습니다.'
                 : 'Base64를 디코딩하는 중 오류가 발생했습니다. 올바른 Base64 형식인지 확인해주세요.');
@@ -63,8 +62,7 @@ export default function Base64Converter() {
         try {
             await navigator.clipboard.writeText(text);
             alert('클립보드에 복사되었습니다!');
-        } catch (error) {
-            console.error('복사 실패:', error);
+        } catch {
             alert('클립보드에 복사하지 못했습니다.');
         }
     };
@@ -104,7 +102,8 @@ export default function Base64Converter() {
                                 </label>
                                 <button
                                     onClick={() => copyToClipboard(input)}
-                                    className="text-blue-500 hover:text-blue-600 text-sm"
+                                    disabled={!input}
+                                    className="text-blue-500 hover:text-blue-600 text-sm disabled:cursor-not-allowed disabled:text-gray-400"
                                 >
                                     복사
                                 </button>
@@ -126,7 +125,8 @@ export default function Base64Converter() {
                                 </label>
                                 <button
                                     onClick={() => copyToClipboard(output)}
-                                    className="text-blue-500 hover:text-blue-600 text-sm"
+                                    disabled={!output}
+                                    className="text-blue-500 hover:text-blue-600 text-sm disabled:cursor-not-allowed disabled:text-gray-400"
                                 >
                                     복사
                                 </button>
@@ -170,4 +170,4 @@ export default function Base64Converter() {
             </div>
         </div>
     );
-} 
+}

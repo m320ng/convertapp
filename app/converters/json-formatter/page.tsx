@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { CopyResultAction } from '@/app/components/copy-result-action';
 
 export default function JsonFormatter() {
     const [input, setInput] = useState('');
@@ -21,8 +22,7 @@ export default function JsonFormatter() {
                 setInput(text);
                 formatJson(text);
             }
-        } catch (error) {
-            console.error('붙여넣기 실패:', error);
+        } catch {
             alert('클립보드에서 가져오지 못했습니다');
         }
     };
@@ -35,8 +35,7 @@ export default function JsonFormatter() {
             const formatted = JSON.stringify(parsed, null, 2);
             setOutput(formatted);
             setError(null);
-        } catch (err) {
-            console.error('formatJson 실패:', err);
+        } catch {
             setError('유효하지 않은 JSON 형식입니다. 다시 확인해주세요.');
             setOutput('');
         }
@@ -50,23 +49,12 @@ export default function JsonFormatter() {
         }
     };
 
-    const copyToClipboard = async () => {
-        try {
-            await navigator.clipboard.writeText(output);
-            alert('클립보드에 복사되었습니다!');
-        } catch (error) {
-            console.error('복사 실패:', error);
-            alert('클립보드에 복사하지 못했습니다');
-        }
-    };
-
     const minifyJson = () => {
         try {
             const parsed = JSON.parse(output || input);
             const minified = JSON.stringify(parsed);
             setOutput(minified);
-        } catch (err) {
-            console.error('minifyJson 실패:', err);
+        } catch {
             setError('JSON을 압축하는 중 오류가 발생했습니다.');
         }
     };
@@ -139,12 +127,12 @@ export default function JsonFormatter() {
                                     >
                                         압축하기
                                     </button>
-                                    <button
-                                        onClick={copyToClipboard}
-                                        className="text-blue-500 hover:text-blue-600 text-sm"
-                                    >
-                                        클립보드에 복사
-                                    </button>
+                                    <CopyResultAction
+                                        value={output}
+                                        label="클립보드에 복사"
+                                        copiedMessage="포맷팅된 JSON을 복사했습니다."
+                                        className="border-0 px-0 py-0 text-blue-500 shadow-none hover:bg-transparent hover:text-blue-600"
+                                    />
                                 </div>
                             </div>
                             <pre className="bg-gray-100 p-4 rounded-lg whitespace-pre-wrap font-mono text-sm overflow-auto max-h-96">
@@ -156,4 +144,4 @@ export default function JsonFormatter() {
             </div>
         </div>
     );
-} 
+}

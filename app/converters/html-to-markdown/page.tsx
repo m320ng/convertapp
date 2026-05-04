@@ -1,13 +1,35 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
+import { convertHtmlToMarkdown } from '@/app/lib/html-to-markdown';
 
 export default function HtmlToMarkdown() {
     const [markdown, setMarkdown] = useState('');
     const [showInput, setShowInput] = useState(false);
     const [htmlInput, setHtmlInput] = useState('');
+    const [error, setError] = useState<string | null>(null);
 
-    const handlePaste = async (e: ClipboardEvent) => {
+    const convertToMarkdown = useCallback((html: string) => {
+        try {
+            const nextMarkdown = convertHtmlToMarkdown(html);
+            setMarkdown(nextMarkdown);
+            setError(null);
+            if (!showInput) {
+                setHtmlInput('');
+                setShowInput(false);
+            }
+        } catch (conversionError) {
+            setMarkdown('');
+            setError(
+                conversionError instanceof Error
+                    ? conversionError.message
+                    : 'HTML을 Markdown으로 변환하는 중 오류가 발생했습니다.',
+            );
+        }
+    }, [showInput]);
+
+    const handlePaste = useCallback((e: ClipboardEvent) => {
         // textarea나 input에서의 붙여넣기는 무시
         if (e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement) {
             return;
@@ -23,43 +45,21 @@ export default function HtmlToMarkdown() {
                 throw new Error('클립보드가 비어있습니다');
             }
 
-            await convertToMarkdown(html);
+            convertToMarkdown(html);
         } catch (error) {
-            console.error('HTML을 Markdown으로 변환하는 중 오류 발생:', error);
-            alert('변환에 실패했습니다. 다시 시도해주세요.');
+            setMarkdown('');
+            setError(
+                error instanceof Error
+                    ? error.message
+                    : '클립보드에서 HTML을 가져오지 못했습니다.',
+            );
         }
-    };
+    }, [convertToMarkdown]);
 
-    const convertToMarkdown = async (html: string) => {
-        try {
-            const response = await fetch('/api/convert/html-to-markdown', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ html }),
-            });
-
-            if (!response.ok) {
-                throw new Error('변환에 실패했습니다');
-            }
-
-            const data = await response.json();
-            setMarkdown(data.markdown);
-            if (!showInput) {  // 직접 입력 모드가 아닐 때만 초기화
-                setHtmlInput('');
-                setShowInput(false);
-            }
-        } catch (error) {
-            console.error('HTML을 Markdown으로 변환하는 중 오류 발생:', error);
-            alert('변환에 실패했습니다. 다시 시도해주세요.');
-        }
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (htmlInput.trim()) {
-            await convertToMarkdown(htmlInput);
+            convertToMarkdown(htmlInput);
         }
     };
 
@@ -67,8 +67,7 @@ export default function HtmlToMarkdown() {
         try {
             await navigator.clipboard.writeText(markdown);
             alert('클립보드에 복사되었습니다!');
-        } catch (error) {
-            console.error('복사 실패:', error);
+        } catch {
             alert('클립보드에 복사하지 못했습니다');
         }
     };
@@ -78,7 +77,7 @@ export default function HtmlToMarkdown() {
         return () => {
             document.removeEventListener('paste', handlePaste);
         };
-    }, []);
+    }, [handlePaste]);
 
     return (
         <div className="min-h-screen p-8">
@@ -116,6 +115,12 @@ export default function HtmlToMarkdown() {
                     </form>
                 )}
 
+                {error && (
+                    <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
+                        {error}
+                    </div>
+                )}
+
                 {markdown && (
                     <div className="mt-6">
                         <div className="flex justify-between items-center mb-2">
@@ -135,4 +140,4 @@ export default function HtmlToMarkdown() {
             </div>
         </div>
     );
-} 
+}

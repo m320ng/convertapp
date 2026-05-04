@@ -85,8 +85,7 @@ export async function POST(request: Request) {
             as: data.as
         });
 
-    } catch (error) {
-        console.error('IP 지역 조회 오류:', error);
+    } catch {
         return NextResponse.json(
             { error: 'IP 주소 조회에 실패했습니다' },
             { status: 500 }
@@ -106,8 +105,7 @@ export async function GET() {
         const data = await response.json();
         return NextResponse.json({ ip: data.query });
 
-    } catch (error) {
-        console.error('클라이언트 IP 조회 오류:', error);
+    } catch {
         return NextResponse.json(
             { error: '클라이언트 IP 조회에 실패했습니다' },
             { status: 500 }

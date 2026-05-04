@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6f7f9;
+  --foreground: #111827;
 }
 
 @theme inline {
@@ -12,19 +12,56 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
 }
 
+@layer base {
+  input,
+  textarea,
+  select,
+  button {
+    min-width: 0;
+  }
+
+  pre,
+  code {
+    max-width: 100%;
+  }
+
+  pre {
+    min-width: 0;
+    overflow-x: auto;
+  }
+}
+
+@layer components {
+  .result-output {
+    max-width: 100%;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .result-output pre,
+  pre.result-output {
+    overflow-x: auto;
+  }
+
+  .result-output code,
+  code.result-output {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+
+::selection {
+  background: #dbeafe;
+  color: #0f172a;
+}
 
 /* 사용자 정의 배경 그라데이션 유틸리티 */
 @layer utilities {

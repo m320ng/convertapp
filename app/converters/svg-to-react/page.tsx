@@ -22,8 +22,7 @@ export default function SvgToReact() {
                 setInput(text);
                 await convertSvgToReact(text);
             }
-        } catch (error) {
-            console.error('붙여넣기 실패:', error);
+        } catch {
             alert('클립보드에서 가져오지 못했습니다');
         }
     };
@@ -91,8 +90,7 @@ ${componentName}.displayName = '${componentName}';
 export default ${componentName};`;
 
             setOutput(componentCode);
-        } catch (error) {
-            console.error('SVG 변환 중 오류 발생:', error);
+        } catch {
             setError('SVG를 React 컴포넌트로 변환하는 중 오류가 발생했습니다. SVG 코드를 확인해주세요.');
         } finally {
             setIsLoading(false);
@@ -111,8 +109,7 @@ export default ${componentName};`;
         try {
             await navigator.clipboard.writeText(output);
             alert('클립보드에 복사되었습니다!');
-        } catch (error) {
-            console.error('복사 실패:', error);
+        } catch {
             alert('클립보드에 복사하지 못했습니다');
         }
     };
@@ -208,4 +205,4 @@ export default ${componentName};`;
             </div>
         </div>
     );
-} 
+}

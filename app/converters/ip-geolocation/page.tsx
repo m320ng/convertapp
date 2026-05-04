@@ -59,7 +59,6 @@ export default function IpGeolocation() {
                 as: data.as
             });
         } catch (err) {
-            console.error('IP 조회 중 오류:', err);
             setError(err instanceof Error ? err.message : 'IP 주소 조회에 실패했습니다.');
             setResult(null);
         } finally {
@@ -83,8 +82,7 @@ export default function IpGeolocation() {
         try {
             await navigator.clipboard.writeText(text);
             alert('클립보드에 복사되었습니다!');
-        } catch (error) {
-            console.error('복사 실패:', error);
+        } catch {
             alert('클립보드에 복사하지 못했습니다');
         }
     };
@@ -99,8 +97,8 @@ export default function IpGeolocation() {
                     setInput(data.ip);
                     fetchGeoLocation(data.ip);
                 }
-            } catch (err) {
-                console.error('클라이언트 IP 조회 실패:', err);
+            } catch {
+                setError('클라이언트 IP를 자동으로 조회하지 못했습니다. IP 주소를 직접 입력해주세요.');
             }
         };
 
@@ -242,4 +240,4 @@ export default function IpGeolocation() {
             </div>
         </div>
     );
-} 
+}

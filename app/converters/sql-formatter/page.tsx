@@ -22,8 +22,7 @@ export default function SqlFormatter() {
                 setInput(text);
                 formatSql(text);
             }
-        } catch (error) {
-            console.error('붙여넣기 실패:', error);
+        } catch {
             alert('클립보드에서 가져오지 못했습니다');
         }
     };
@@ -38,8 +37,7 @@ export default function SqlFormatter() {
                 linesBetweenQueries: 2,
             });
             setOutput(formatted);
-        } catch (error) {
-            console.error('SQL 포맷팅 중 오류 발생:', error);
+        } catch {
             alert('SQL 쿼리 포맷팅에 실패했습니다. 쿼리문을 확인해주세요.');
         } finally {
             setIsLoading(false);
@@ -58,8 +56,7 @@ export default function SqlFormatter() {
         try {
             await navigator.clipboard.writeText(output);
             alert('클립보드에 복사되었습니다!');
-        } catch (error) {
-            console.error('복사 실패:', error);
+        } catch {
             alert('클립보드에 복사하지 못했습니다');
         }
     };
@@ -143,4 +140,4 @@ export default function SqlFormatter() {
             </div>
         </div>
     );
-} 
+}

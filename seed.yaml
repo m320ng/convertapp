@@ -1,0 +1,173 @@
+goal: Modernize ConvertApp into a clean productivity-style web utility app and add
+  fully functional developer utility tools.
+task_type: code
+brownfield_context:
+  project_type: greenfield
+  context_references: []
+  existing_patterns: []
+  existing_dependencies: []
+constraints:
+- Modern UI redesign
+- Clean productivity tool impression
+- Reorganize layout and information architecture
+- Improve colors and typography
+- Improve tool card/list discoverability
+- Expand tools alongside existing tools, not as separate categories
+- Sort tool list by expected usage frequency
+- All new tools must run in the browser locally
+- Sensitive values must not be stored
+- All new tools must provide result copy functionality
+- Error messages must be clear and in Korean
+- UI must be responsive
+implementation_contract:
+  tool_ordering:
+    sort_order: expected_usage_frequency_desc
+    display_rule: Render one unified tool list. Do not split newly added developer
+      utilities into a separate category or section.
+    frequency_basis: Expected frequency for a developer-focused productivity utility
+      app, prioritizing daily text/API/debugging tasks over less frequent validation
+      and generation tasks.
+    tool_list:
+    - usage_rank: 1
+      tool: JSON formatter / validator
+      source: existing
+      reason: Most frequent structured-data inspection and formatting task.
+    - usage_rank: 2
+      tool: JWT decoder / generator
+      source: new
+      reason: Common authentication debugging task that should be immediately visible.
+    - usage_rank: 3
+      tool: Base64 encoder / decoder
+      source: existing
+      reason: Frequent token, payload, and header conversion task.
+    - usage_rank: 4
+      tool: URL encoder / decoder
+      source: existing
+      reason: Frequent web request and query-string conversion task.
+    - usage_rank: 5
+      tool: Curl to code / code to Curl converter
+      source: new
+      reason: Common API workflow bridge between terminal requests and app code.
+    - usage_rank: 6
+      tool: Regex test tool
+      source: new
+      reason: Frequent development and text-processing validation task.
+    - usage_rank: 7
+      tool: Unix timestamp converter
+      source: existing
+      reason: Common debugging support task, especially for logs and API payloads.
+    - usage_rank: 8
+      tool: .env validator
+      source: new
+      reason: Important configuration quality tool, used less often than request and
+        payload utilities.
+    - usage_rank: 9
+      tool: Random token generator
+      source: new
+      reason: Useful setup and testing tool, but less frequently revisited than
+        debugging converters.
+    - usage_rank: 10
+      tool: UUID generator
+      source: existing
+      reason: Common fixture and identifier helper, but usually a quick one-off task.
+    - usage_rank: 11
+      tool: Hash generator
+      source: existing
+      reason: Useful for checksums and signatures, but lower everyday usage.
+acceptance_criteria:
+- First screen presents a modern clean productivity tool interface
+- Tool list is easier to scan and navigate
+- Existing and new tools appear together in expected usage frequency order
+- Random token generator works with core advanced options and error handling
+- JWT decoder/generator works with core advanced options and error handling
+- Curl to code and code to Curl converter works with language/options support and
+  error handling
+- Regex test tool works with flags, match feedback, and error handling
+- .env validator works with validation feedback for string-related issues
+- Every new tool provides copy result action
+- No sensitive input is persisted
+- Responsive layout works across desktop and mobile
+ontology_schema:
+  name: ConvertAppToolRedesign
+  description: Represents the redesigned ConvertApp tool experience, including modernized
+    UI structure and new browser-local developer utilities.
+  fields:
+  - name: app_name
+    type: string
+    description: The application being redesigned
+    required: true
+  - name: design_goal
+    type: string
+    description: The intended visual and UX direction
+    required: true
+  - name: tool_list
+    type: array
+    description: Existing and newly added tools shown together
+    required: true
+  - name: sort_order
+    type: string
+    description: Rule used to order tools on the first screen
+    required: true
+  - name: tool
+    type: string
+    description: A utility available in ConvertApp
+    required: true
+  - name: tool_options
+    type: object
+    description: Core and advanced options supported by each tool
+    required: true
+  - name: result
+    type: object
+    description: Generated, decoded, converted, matched, or validated output
+    required: true
+  - name: copy_action
+    type: boolean
+    description: Whether the tool supports copying results
+    required: true
+  - name: error_message
+    type: string
+    description: Clear Korean error feedback shown to the user
+    required: true
+  - name: local_processing
+    type: boolean
+    description: Whether processing happens only in the browser
+    required: true
+  - name: responsive_ui
+    type: boolean
+    description: Whether the interface adapts to desktop and mobile
+    required: true
+evaluation_principles:
+- name: Modernity
+  description: UI feels contemporary, clean, and productivity-focused
+  weight: 0.25
+- name: Discoverability
+  description: Users can quickly find and scan tools from the first screen
+  weight: 0.2
+- name: Functional completeness
+  description: Each new tool implements practical advanced options and real behavior
+  weight: 0.3
+- name: Error handling
+  description: Invalid input and edge cases produce clear Korean feedback
+  weight: 0.15
+- name: Privacy
+  description: Sensitive data is processed locally and not stored
+  weight: 0.1
+exit_conditions:
+- name: UIRedesignComplete
+  description: The app presents a modern clean productivity-oriented interface
+  criteria: First screen, layout, typography, colors, and tool navigation are updated
+- name: ToolsImplemented
+  description: All requested developer utilities are functional
+  criteria: Random token generator, JWT decoder/generator, Curl code converter, Regex
+    tester, and .env validator work with core advanced options
+- name: CommonUXComplete
+  description: Shared UX requirements are satisfied
+  criteria: Copy results, Korean errors, responsive UI, local processing, and no sensitive
+    value persistence are implemented
+metadata:
+  seed_id: seed_63364e49f437
+  version: 1.0.0
+  created_at: '2026-05-03T19:03:10.544890Z'
+  ambiguity_score: 0.19
+  interview_id: interview_20260503_185010
+  parent_seed_id: null

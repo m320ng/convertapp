@@ -71,8 +71,7 @@ export default function HashGenerator() {
         try {
             await navigator.clipboard.writeText(hash);
             alert('클립보드에 복사되었습니다!');
-        } catch (error) {
-            console.error('복사 실패:', error);
+        } catch {
             alert('클립보드에 복사하지 못했습니다');
         }
     };
@@ -221,4 +220,4 @@ export default function HashGenerator() {
             </div>
         </div>
     );
-} 
+}

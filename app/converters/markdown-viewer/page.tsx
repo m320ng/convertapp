@@ -5,6 +5,8 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import Image from 'next/image';
 
+import { CopyResultAction } from '@/app/components/copy-result-action';
+
 const DEFAULT_MARKDOWN = `# 마크다운 미리보기
 
 ## 기본 문법
@@ -29,12 +31,12 @@ const DEFAULT_MARKDOWN = `# 마크다운 미리보기
 > 여러 줄도 가능합니다.
 
 ### 코드
-인라인 코드: \`console.log('Hello World')\`
+인라인 코드: \`const greeting = 'Hello World'\`
 
 코드 블록:
 \`\`\`javascript
 function hello() {
-  console.log('Hello World');
+  return 'Hello World';
 }
 \`\`\`
 
@@ -71,55 +73,64 @@ export default function MarkdownViewer() {
         setMarkdown(e.target.value);
     };
 
-    const copyToClipboard = async (text: string) => {
-        try {
-            await navigator.clipboard.writeText(text);
-            alert('클립보드에 복사되었습니다!');
-        } catch (error) {
-            console.error('복사 실패:', error);
-            alert('클립보드에 복사하지 못했습니다.');
-        }
-    };
-
     return (
-        <div className="min-h-screen p-8 bg-white">
-            <div className="max-w-6xl mx-auto">
-                <h1 className="text-3xl font-bold mb-6">Markdown 뷰어</h1>
+        <div className="px-4 py-6 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-6xl space-y-6">
+                <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-[0_18px_48px_rgba(15,23,42,0.08)] sm:p-7">
+                    <p className="text-sm font-bold text-lime-700">브라우저 로컬 문서 미리보기</p>
+                    <div className="mt-2 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                        <div>
+                            <h1 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+                                Markdown 뷰어
+                            </h1>
+                            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
+                                GitHub Flavored Markdown을 입력하고 표, 체크리스트, 코드 블록을 실시간으로 확인합니다.
+                            </p>
+                        </div>
+                        <div className="w-fit max-w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-600">
+                            {showPreview ? '분할 화면' : '입력 전체 화면'}
+                        </div>
+                    </div>
+                </section>
 
-                <div className="mb-6">
-                    <div className="flex space-x-4 mb-4">
+                <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+                    <div className="mb-4 flex flex-wrap gap-2">
                         <button
+                            type="button"
                             onClick={() => setShowPreview(true)}
-                            className={`px-4 py-2 rounded transition-colors ${showPreview
-                                ? 'bg-blue-500 text-white'
-                                : 'bg-gray-100 hover:bg-gray-200 text-gray-900'
+                            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${showPreview
+                                ? 'bg-slate-950 text-white'
+                                : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
                                 }`}
                         >
                             분할 화면
                         </button>
                         <button
+                            type="button"
                             onClick={() => setShowPreview(false)}
-                            className={`px-4 py-2 rounded transition-colors ${!showPreview
-                                ? 'bg-blue-500 text-white'
-                                : 'bg-gray-100 hover:bg-gray-200 text-gray-900'
+                            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${!showPreview
+                                ? 'bg-slate-950 text-white'
+                                : 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
                                 }`}
                         >
                             전체 화면
                         </button>
                     </div>
 
-                    <div className={`grid ${showPreview ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'} gap-4`}>
+                    <div className={`grid min-w-0 ${showPreview ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'} gap-4`}>
                         <div className="space-y-2">
                             <div className="flex justify-between items-center">
                                 <label className="text-sm font-medium text-gray-700">
                                     마크다운 입력
                                 </label>
-                                <button
-                                    onClick={() => copyToClipboard(markdown)}
-                                    className="text-sm text-blue-500 hover:text-blue-600 transition-colors"
-                                >
-                                    복사
-                                </button>
+                                <CopyResultAction
+                                    value={markdown}
+                                    label="복사"
+                                    copiedMessage="마크다운을 클립보드에 복사했습니다."
+                                    emptyMessage="복사할 마크다운이 없습니다."
+                                    disabled={!markdown}
+                                    className="rounded-md border-slate-200 px-3 py-1.5 text-slate-700 hover:bg-slate-50"
+                                />
                             </div>
                             <textarea
                                 value={markdown}
@@ -130,13 +141,13 @@ export default function MarkdownViewer() {
                         </div>
 
                         {showPreview && (
-                            <div className="space-y-2">
+                            <div className="min-w-0 space-y-2">
                                 <div className="flex justify-between items-center">
                                     <label className="text-sm font-medium text-gray-700">
                                         미리보기
                                     </label>
                                 </div>
-                                <div className="markdown-preview w-full h-[calc(100vh-300px)] p-6 border rounded-lg overflow-y-auto bg-white border-gray-200">
+                                <div className="markdown-preview result-output h-[calc(100vh-300px)] w-full overflow-y-auto rounded-lg border border-gray-200 bg-white p-6">
                                     <ReactMarkdown
                                         remarkPlugins={[remarkGfm]}
                                         components={{
@@ -228,9 +239,9 @@ export default function MarkdownViewer() {
                             </div>
                         )}
                     </div>
-                </div>
+                </section>
 
-                <div className="mt-8">
+                <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
                     <h2 className="text-xl font-semibold mb-4">도움말</h2>
                     <ul className="list-disc pl-5 space-y-2 text-gray-600">
                         <li>마크다운 문법으로 작성된 텍스트를 실시간으로 미리볼 수 있습니다.</li>
@@ -239,8 +250,8 @@ export default function MarkdownViewer() {
                         <li>전체 화면 모드에서는 입력 영역을 더 넓게 사용할 수 있습니다.</li>
                         <li>작성한 마크다운 텍스트를 클립보드에 복사할 수 있습니다.</li>
                     </ul>
-                </div>
+                </section>
             </div>
         </div>
     );
-} 
+}
